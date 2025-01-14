@@ -8,6 +8,8 @@ public class NewsContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Article> Articles { get; set; }
     
+    public DbSet<Comment> Comments { get; set; }
+    
     public NewsContext(DbContextOptions<NewsContext> options) : base(options)
     {
     }
@@ -45,6 +47,7 @@ public class Article
         
     public Author Author { get; set; }
     public List<Tag> Tags { get; set; }
+    public List<Comment> Comments { get; set; }
 }
 
 public class Author
@@ -61,4 +64,13 @@ public class Tag
     public string TagName { get; set; }
         
     public List<Article> Articles { get; set; }
+}
+
+public class Comment
+{
+    public int CommentId { get; set; }
+    public string UserName { get; set; }
+    public string Content { get; set; }
+    
+    public Article Article { get; set; }
 }

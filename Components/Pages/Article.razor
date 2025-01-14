@@ -2,7 +2,7 @@
 @using BlazorProject.Data
 @using Microsoft.EntityFrameworkCore
 @inject NewsContext _NewsContext
-@attribute [StreamRendering]
+@rendermode InteractiveServer
 
 @if (article == null)
 {
@@ -23,19 +23,50 @@ else
 else
 {
     <h1>@article.Title</h1> 
-    @* <p><em>@article.Author.Name</em></p> *@
+    <p><em>@article.Author.Name</em></p>
     <p>@article.Content</p>
+    
+    <EditForm Model=@NewComment OnSubmit=@CommentIngestuurd FormName="CommentForm" >
+        <InputText @bind-Value="@NewComment.UserName" placeholder="Je naam" ></InputText>
+        <InputText @bind-Value="@NewComment.Content" placeholder="Je opmerking" ></InputText>
+        <input type="submit" value="Stuur in">
+    </EditForm>
+    
+    <h3>Comments</h3>
+        @foreach(var comment in article.Comments)
+        {
+            <p>
+                <em>@comment.UserName</em> schreef:
+                <p>
+                    @comment.Content
+                </p>
+            </p>
+        }
 }
+
+
+
 
 @code {
     private BlazorProject.Data.Article? article;
+    
+    [SupplyParameterFromForm]
+    private Comment? NewComment { get; set; }
 
     [Parameter] public string? Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        article = await _NewsContext.Articles.FirstOrDefaultAsync(article => article.ArticleId == Convert.ToInt32(Id));
+        article = await _NewsContext.Articles.Include(article => article.Author).Include(article => article.Comments).FirstOrDefaultAsync(article => article.ArticleId == int.Parse(Id));
     }
     
+    protected override void OnInitialized() => NewComment ??= new();
+
+    private void CommentIngestuurd(EditContext editContext)
+    {
+        NewComment.Article = article;
+        _NewsContext.Comments.Add(NewComment);
+        _NewsContext.SaveChanges();
+    }
 
 }

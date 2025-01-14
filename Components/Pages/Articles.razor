@@ -19,7 +19,7 @@ else
     @foreach (var article in articles)
         {
             <a href="/articles/@article.ArticleId"><h3>@article.Title</h3></a>
-            @* <p><em>@article.Author.Name</em></p> *@
+            <p><em>@article.Author.Name</em></p>
             <p>@article.Content</p>
         }
 }
@@ -27,9 +27,9 @@ else
 @code {
     private BlazorProject.Data.Article[]? articles;
     
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        articles = _NewsContext.Articles.ToArray();
+        articles = _NewsContext.Articles.Include(article => article.Author).ToArray();
     }
     
 

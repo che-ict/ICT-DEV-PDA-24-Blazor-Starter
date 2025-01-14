@@ -16,8 +16,8 @@ public class Program
         
         // Add database context
         builder.Services.AddDbContext<NewsContext>(options =>
-            options.UseMySql("Server=localhost; User ID=root; Database=newsapp",
-                ServerVersion.AutoDetect("Server=localhost; User ID=root; Database=newsapp")));
+            options.UseMySql("Server=localhost; User ID=root; Database=newsapp2",
+                ServerVersion.AutoDetect("Server=localhost; User ID=root; Database=newsapp2")));
         
         
         var app = builder.Build();

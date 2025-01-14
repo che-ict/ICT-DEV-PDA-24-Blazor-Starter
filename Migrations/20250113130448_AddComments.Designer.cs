@@ -4,6 +4,7 @@ using BlazorProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorProject.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    partial class NewsContextModelSnapshot : ModelSnapshot
+    [Migration("20250113130448_AddComments")]
+    partial class AddComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,17 +158,12 @@ namespace BlazorProject.Migrations
             modelBuilder.Entity("BlazorProject.Data.Comment", b =>
                 {
                     b.HasOne("BlazorProject.Data.Article", "Article")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Article");
-                });
-
-            modelBuilder.Entity("BlazorProject.Data.Article", b =>
-                {
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("BlazorProject.Data.Author", b =>
